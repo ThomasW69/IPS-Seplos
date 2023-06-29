@@ -7,7 +7,7 @@
  * @package       Seplos
  * @file          module.php
  * @author        Thomas Westerhoff <thomas.westerhoff24@gmx.de>
- * @copyright     2022 Thomas Westerhoff
+ * @copyright     2023 Thomas Westerhoff
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  * @version       0.10
  *  
@@ -254,6 +254,9 @@ class Seplos extends IPSModule
 				$request = $request.chr($char);
 			}
             //Send to Splitter
+			//$this->SendDebug('Adresse',$address,0);
+			//$this->SendDebug('Request',$request,0);
+
 			$this->SendToSplitter($request);
 
 
