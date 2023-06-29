@@ -1,0 +1,11 @@
+{
+	"id": "{02CEBC1F-C899-1804-1C6B-7FCB56115208}",
+	"name": "Seplos",
+	"type": 3,
+	"vendor": "Seplos",
+	"aliases": ["Seplos"],
+	"parentRequirements": ["{FC9EF969-7AD6-D032-7BCE-C927A6ED6FB4}"],
+	"childRequirements": [],
+	"implemented": ["{FB6BD06E-1499-1676-AB5F-3FB88C340926}"],
+	"prefix": "SEPL"
+}

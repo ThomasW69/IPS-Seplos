@@ -1,0 +1,13 @@
+{
+	"id": "{230FBFB4-E7B1-343E-02AF-87B3DDC0D0DB}",
+	"author": "Thomas Westerhoff",
+	"name": "Seplos",
+	"url": "https://github.com/ThomasW69/IPSSeplos",
+	"compatibility": {
+    "version": "5.0",
+    "date": 1491343200
+	},
+	"version": "0.1",
+	"build": 0,
+	"date": 0
+}

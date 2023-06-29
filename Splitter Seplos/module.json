@@ -1,0 +1,11 @@
+{
+    "id": "{1A6A3230-2612-DA0C-9E5E-D008DBB316F7}",
+    "name": "SeplosSplitter",
+    "type": 2,
+    "vendor": "Seplos",
+    "aliases": ["Seplos Splitter"],
+    "parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+    "childRequirements": ["{FB6BD06E-1499-1676-AB5F-3FB88C340926}"],
+    "implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}", "{FC9EF969-7AD6-D032-7BCE-C927A6ED6FB4}"],
+    "prefix": "SEPLS"
+}
