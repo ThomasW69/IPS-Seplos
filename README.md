@@ -41,7 +41,7 @@ In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
 In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 	
-    `https://github.com/Git_Name/IPSymconXXX`  
+    `https://github.com/ThomasW69/IPS-Seplos`  
     
 und mit _OK_ bestätigen.    
         
@@ -50,14 +50,15 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung in IPS
 
-In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und _xxx_ auswählen.
+In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und nach "Seplos" suchen.
+Das BMS ist unter dem namen "Seplos" zu finden. Der Splitter wirtd automatisch mit erstellt.
 
 
 ## 4. Funktionsreferenz
 
 ### Überschrift:
 
-Beschreibungstext
+Kommt noch
 	
 
 
@@ -81,7 +82,6 @@ Beschreibungstext
 
 #### Überschrift:
 
-`SEPL_Function(integer $InstanceID)`
 
 Beschreibung Funktion
 
@@ -89,5 +89,4 @@ Beschreibung Funktion
 ###  b. GUIDs und Datenaustausch:
 
 #### Überschrift:
-
-GUID: `{5D65F1E1-D952-749C-DD8C-A8CD5B667C2B}` 
+Kommt noch
