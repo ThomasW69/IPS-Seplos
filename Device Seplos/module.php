@@ -51,7 +51,7 @@ class Seplos extends IPSModule
     ['Temperatures', 'Temperature4', 		VARIABLETYPE_FLOAT,    VALTYP_WORD,     	'~Temperature',     	      97,      0.1, -273.1,  true],  //Temperatur4
     ['Temperatures', 'TempEnv',      		VARIABLETYPE_FLOAT,    VALTYP_WORD,     	'~Temperature',       	     101,      0.1, -273.1,  true],  //Environmental Temperature
     ['Temperatures', 'TempPower',    		VARIABLETYPE_FLOAT,    VALTYP_WORD,     	'~Temperature',       		 105,      0.1, -273.1,  true],  //Power Temperature
-    ['Current', 	 'Current',    	        VARIABLETYPE_FLOAT,    VALTYP_SWORD,       	'~Ampere',         			 109,      1,     0,  true],  //Current mti Vorzeichen
+    ['Current', 	 'Current',    	        VARIABLETYPE_FLOAT,    VALTYP_SWORD,       	'~Ampere',         			 109,      0.01,     0,  true],  //Current mti Vorzeichen
     ['Status',  	 'Cap',       	        VARIABLETYPE_FLOAT,    VALTYP_WORD,        	'Charge_Ah',         		 123,      0.01,     0,  true],  //Capacity
     ['Status',  	 'CapRes',    	        VARIABLETYPE_FLOAT,    VALTYP_WORD,        	'Charge_Ah',         		 117,      0.01,     0,  true],  //Residual Capacity
     ['Status',  	 'CapRat',    	        VARIABLETYPE_FLOAT,    VALTYP_WORD,        	'Charge_Ah',         		 131,      0.01,     0,  true],  //Rated Capacity
