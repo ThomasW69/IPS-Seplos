@@ -41,7 +41,7 @@ In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
 In dem sich öffnenden Fenster folgende URL hinzufügen:
 
 	
-    `https://github.com/ThomasW69/IPS-Seplos`  
+    `https://github.com/ThomasW69/IPS-Seplos.git`  
     
 und mit _OK_ bestätigen.    
         

@@ -16,7 +16,7 @@
 
  //Constants for Typeconversion
  const VALTYP_WORD      = 1;      
- const VALTYP_SHORT     = 2;      
+ const VALTYP_SWORD     = 2;      
 
 
 
@@ -51,7 +51,7 @@ class Seplos extends IPSModule
     ['Temperatures', 'Temperature4', 		VARIABLETYPE_FLOAT,    VALTYP_WORD,     	'~Temperature',     	      97,      0.1, -273.1,  true],  //Temperatur4
     ['Temperatures', 'TempEnv',      		VARIABLETYPE_FLOAT,    VALTYP_WORD,     	'~Temperature',       	     101,      0.1, -273.1,  true],  //Environmental Temperature
     ['Temperatures', 'TempPower',    		VARIABLETYPE_FLOAT,    VALTYP_WORD,     	'~Temperature',       		 105,      0.1, -273.1,  true],  //Power Temperature
-    ['Current', 	 'Current',    	        VARIABLETYPE_FLOAT,    VALTYP_SHORT,       	'~Ampere',         			 109,      0.0001,   0,  true],  //Current 
+    ['Current', 	 'Current',    	        VARIABLETYPE_FLOAT,    VALTYP_SWORD,       	'~Ampere',         			 109,      1,     0,  true],  //Current mti Vorzeichen
     ['Status',  	 'Cap',       	        VARIABLETYPE_FLOAT,    VALTYP_WORD,        	'Charge_Ah',         		 123,      0.01,     0,  true],  //Capacity
     ['Status',  	 'CapRes',    	        VARIABLETYPE_FLOAT,    VALTYP_WORD,        	'Charge_Ah',         		 117,      0.01,     0,  true],  //Residual Capacity
     ['Status',  	 'CapRat',    	        VARIABLETYPE_FLOAT,    VALTYP_WORD,        	'Charge_Ah',         		 131,      0.01,     0,  true],  //Rated Capacity
@@ -85,6 +85,7 @@ class Seplos extends IPSModule
 		//Variablenprofile anlegen
 		$this->RegisterProfile('Charge_Ah','EnergyStorage','',' Ah',0,0,0,2,2);
 		$this->RegisterProfile('LiFePoCellVoltage','EnergyStorage','',' V',2.4,3.7,1,3,2);
+		$this->RegisterProfile('Percent','','',' %',0,100,1,1,2);
 	    
 		//Zum Splitter verbinden
 		//$this->ConnectParent("{2D76759A-6F96-3DE1-7FBF-371BDE57B9E5}"); // Splitter vom Pylontech
@@ -315,22 +316,30 @@ class Seplos extends IPSModule
 		$adr = 0;  //Wertadresse	
 
 		$receive = json_decode($JSONString);
-		$Data = $receive->{'Buffer'};
-	//	$this->SendDebug("Length:", strlen($Data), 0);
-		$address = $this->ReadPropertyInteger("PAddress");
-		$adrstr = $address;
-		$adrrec = hexdec($Data[3].$Data[4]);
-		if (($adrstr == $adrrec) and (strlen($Data) == 168)){
-		 $this->SendDebug("Treffer:","",0);	
-		 $this->SendDebug("Recieve:", $JSONString, 0);
-		 $this->SetValue('ProtVer', $Data[1].".".$Data[2]);  //Versionsvariable Setzen
- 		 $Zellzahl = hexdec($Data[17].$Data[18]);            //Zellenzahl auslesen
-		  $this->SetValue('CellCount', $Zellzahl);
+//		$Data = $receive->{'Buffer'};
+		$Data = utf8_decode($receive->Buffer);
 
-         //Durch die Variablen parsen und die Werte auslesen
-		 $Variables = json_decode($this->ReadPropertyString('Variables'), true);
+
+		if((strlen($Data) == 168)){    //Wenn Datenpaket die korrekte Länge von 168 bytes hat
+ 		 $address = $this->ReadPropertyInteger("PAddress");
+		 $adrstr = $address;
+		 $this->SendDebug("Data:", $Data, 0);
+		 try  //Abfangen eventuell falscher Daten
+		 { $adrrec = hexdec($Data[3].$Data[4]);}
+		 catch (Exception $ex)
+		 {$adrrec = 65535;}
+		 finally {}
+
+		 if ($adrstr == $adrrec){ //Vergleich ob Adresse stimmt
+		 
+    	  $this->SetValue('ProtVer', $Data[1].".".$Data[2]);  //Protokoll-Versionsvariable setzen
+ 		  $Zellzahl = hexdec($Data[17].$Data[18]);            //Zellenzahl auslesen
+		  $this->SetValue('CellCount', $Zellzahl);            //Zellenzahl speichern
+
+          //Durch die Variablen parsen und die Werte auslesen
+		  $Variables = json_decode($this->ReadPropertyString('Variables'), true);
 		
-		 foreach ($Variables as $Variable) {
+		  foreach ($Variables as $Variable) {
 			 if (!$Variable['Keep']) { continue; }
 			 $adr = $Variable['Address'];  //Adresse holen
 
@@ -340,12 +349,15 @@ class Seplos extends IPSModule
 				switch ($Variable['DataType']) {
 					 case VALTYP_WORD: 
 						$Value = (hexdec($Data[$adr].$Data[$adr+1].$Data[$adr+2].$Data[$adr+3])*$Variable['Factor'])+$Variable['Offset'];
+						if ($adr = 109){
+						 $ValStr= hexdec($Data[$adr].$Data[$adr+1].$Data[$adr+2].$Data[$adr+3]);
+						}
 						break;
 					 
-					 case VALTYP_SHORT:
-						 $Value = hexdec($Data[$adr].$Data[$adr+1].$Data[$adr+2].$Data[$adr+3]);
-							if($Value >= 32768) { $short -= 65536; }
-						 $Value = ($Value+$Variable['Offset'])*$Variable['Factor'];
+					 case VALTYP_SWORD:
+						 $Value = hexdec($Data[$adr].$Data[$adr+1].$Data[$adr+2].$Data[$adr+3]); //Als Integerwert erst mal
+							if($Value >= 32768) { $Value -= 65536; } //Vorzeichen Korrigieren
+						 $Value = ($Value+$Variable['Offset'])*$Variable['Factor']; //in Gleitkomma konvertieren
 						 break;
 				 }
 				 break;
@@ -360,18 +372,16 @@ class Seplos extends IPSModule
 
              //Hier dann für die Temperaturvariablen die Abweichung der Einzelnen Zellen ausrechnen
 			 if (($Variable['Pos'] >=1) && ($Variable['Pos']<= $Zellzahl)){
-				$this->SendDebug($Variable['Pos'].$Variable['Ident'],$Value,0);
+			//	$this->SendDebug($Variable['Pos'].$Variable['Ident'],$Value,0);
 				if ($Value <= $min) {$min = $Value;}
 				if ($Value >= $max) {$max = $Value;}
 			 }
 			 $Deviation=abs($max-$min);
-
-	
 			}
             //Nun noch die Zellenabweichung schreiben
 			$this->SetValue('Deviation', $Deviation);  //Versionsvariable Setzen
-
 		}
+   	   }
 	}
 	
 	public function RequestAction($Ident, $Value)
