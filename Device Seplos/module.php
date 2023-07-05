@@ -317,7 +317,8 @@ class Seplos extends IPSModule
 
 		$receive = json_decode($JSONString);
 //		$Data = $receive->{'Buffer'};
-		$Data = utf8_decode($receive->Buffer);
+		//$Data = utf8_decode($receive->Buffer);
+		$Data = mb_convert_encoding($receive->Buffer, 'ISO-8859-1', 'UTF-8');
 
 
 		if((strlen($Data) == 168)){    //Wenn Datenpaket die korrekte Länge von 168 bytes hat
